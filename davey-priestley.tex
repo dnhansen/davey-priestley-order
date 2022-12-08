@@ -465,20 +465,19 @@
             = \pi_\alpha(x) \join \pi_\alpha(y),
     \end{equation*}
     %
-    and similarly for meets. To show that $L$ is a product in $\catLat$, it thus suffices to show that a collection of lattice homomorphisms $f_\alpha \colon L_\alpha \to K$ factors uniquely through $L$. Uniqueness is clear, and the product map $f \colon L \to K$ is a lattice homomorphism since
+    and similarly for meets. To show that $L$ is a product in $\catLat$, it thus suffices to show that a collection of lattice homomorphisms $f_\alpha \colon K \to L_\alpha$ factors uniquely through $L$. Uniqueness is clear, and the product map $f \colon K \to L$ is a lattice homomorphism since
     %
     \begin{align*}
         f(x \join y)
-            &= f \bigl( (x_\alpha \join y_\alpha)_{\alpha \in A} \bigr)
-             = \bigl( f_\alpha(x_\alpha \join y_\alpha) \bigr)_{\alpha \in A}
-             = \bigl( f_\alpha(x_\alpha) \join f_\alpha(y_\alpha) \bigr)_{\alpha \in A} \\
-            &= \bigl( f_\alpha(x_\alpha) \bigr)_{\alpha \in A} \join \bigl( f_\alpha(y_\alpha) \bigr)_{\alpha \in A}
+            &= \bigl( f_\alpha(x \join y) \bigr)_{\alpha \in A}
+             = \bigl( f_\alpha(x) \join f_\alpha(y) \bigr)_{\alpha \in A} \\
+            &= \bigl( f_\alpha(x) \bigr)_{\alpha \in A} \join \bigl( f_\alpha(y) \bigr)_{\alpha \in A}
              = f(x) \join f(y),
     \end{align*}
     %
     and similarly for meets.
 
-    Denote by $\catCLat$ the (full) subcategory of $\catLat$ whose objects are complete lattices. This category also has all small products, since if $S \subseteq L = \bigprod_{\alpha \in A} L_\alpha$ with all $L_\alpha$ complete, then
+    Denote by $\catCLat$ the (full) subcategory of $\catLat$ whose objects are complete lattices. This category also has all small products, since if $S \subseteq L = \bigprod_{\alpha \in A} L_\alpha$ with all $L_\alpha$ complete, then it is easy to show that
     %
     \begin{equation*}
         \bigjoin S
