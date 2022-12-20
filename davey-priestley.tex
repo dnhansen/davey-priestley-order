@@ -266,6 +266,19 @@
     This obviously extends to set theories augmented with inequality.
 \end{remarkbreak}
 
+\begin{remark}
+    An injective monotone map is not necessarily an order-embedding: For instance, the identity map $\iota \colon \overline{\mathbf{2}} \to \mathbf{2}$ is obviously injective, but it is not an embedding since $0 < 1$ in $\mathbf{2}$ but not in $\overline{\mathbf{2}}$.
+\end{remark}
+
+
+\begin{remarkbreak}[Order-isomorphisms]
+    \label{rem:order-isomorphisms}
+    Let $f \colon P \to Q$ be a monotone map. We claim that $f$ is an order-isomorphism if and only if it is bijective, and its inverse $f\inv$ is also monotone.
+
+    First assume that $f$ is an order-isomorphism, let $u,v \in Q$, and let $x,y \in P$ such that $f(x) = u$ and $f(y) = v$. Then $f\inv(u) = x \leq y = f\inv(v)$ if and only if $u \leq v$, so $f\inv$ is monotone.
+
+    Conversely assume that $f\inv$ exists and is monotone, and assume that $f(x) \leq f(y)$. Then $x = f\inv(f(x)) \leq f\inv(f(y)) = y$, so $f$ is an order-embedding, hence an order-isomorphism.
+\end{remarkbreak}
 
 
 \begin{remarkbreak}[The category of ordered sets]
@@ -342,11 +355,6 @@
 
     Notice that if $A$ has the discrete order, then the second clause above is never satisfied, and the order reduces to the coproduct order.
 \end{remarkbreak}
-
-
-\begin{remark}
-    An injective monotone map is not necessarily an order-embedding: For instance, the identity map $\iota \colon \overline{\mathbf{2}} \to \mathbf{2}$ is obviously injective, but it is not an embedding since $0 < 1$ in $\mathbf{2}$ but not in $\overline{\mathbf{2}}$.
-\end{remark}
 
 \newcommand{\downsets}{\mathcal{O}}
 \newcommand{\op}{^{\mathrm{op}}}
@@ -440,6 +448,11 @@
     In other words, if $\phi$ holds in all lattices, then so does $\phi\dual$. This follows just as the duality principle for ordered sets, either syntactically or semantically.
 
     As with ordered sets, this extends to set theories as well.
+\end{remarkbreak}
+
+
+\begin{remarkbreak}[Order-isomorphisms and lattice isomorphisms]
+    Proposition~2.19(i) says that a lattice homomorphism is also monotone. To show that a lattice isomorphism $f \colon L \to K$ is also an order-isomorphism, it suffices to recall \cref{rem:order-isomorphisms}: For both $f$ and $f\inv$ are lattice homomorphisms, hence monotone, so $f$ is an order-isomorphism. (The converse is proved in Proposition~2.19(ii).)
 \end{remarkbreak}
 
 
