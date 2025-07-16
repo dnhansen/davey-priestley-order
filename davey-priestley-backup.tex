@@ -1,0 +1,1392 @@
+% Document setup
+\documentclass[article, a4paper, 11pt, oneside]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[UKenglish]{babel}
+
+% Document info
+\newcommand\doctitle{Davey \& Priesley, \emph{Introduction to Lattices and Order}}
+\newcommand\docauthor{Danny Nygård Hansen}
+
+% Formatting and layout
+\usepackage[autostyle]{csquotes}
+\usepackage[final]{microtype}
+\usepackage{xcolor}
+\frenchspacing
+\usepackage{latex-sty/articlepagestyle}
+\usepackage{latex-sty/articlesectionstyle}
+% \usepackage{latex-sty/amalgsymbol}
+
+% Fonts
+\usepackage[largesmallcaps]{kpfonts}
+\DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
+\linespread{1.06}
+\let\mathfrak\undefined
+\usepackage{eufrak}
+\usepackage{inconsolata}
+% \usepackage{amssymb}
+
+% Hyperlinks
+\usepackage{hyperref}
+\definecolor{linkcolor}{HTML}{4f4fa3}
+\hypersetup{%
+	pdftitle=\doctitle,
+	pdfauthor=\docauthor,
+	colorlinks,
+	linkcolor=linkcolor,
+	citecolor=linkcolor,
+	urlcolor=linkcolor,
+	bookmarksnumbered=true
+}
+
+% Equation numbering
+\numberwithin{equation}{chapter}
+
+% Footnotes
+\footmarkstyle{\textsuperscript{#1}\hspace{0.25em}}
+
+% Mathematics
+\usepackage{latex-sty/basicmathcommands}
+\usepackage{latex-sty/framedtheorems}
+\usepackage{latex-sty/topologycommands}
+\usepackage{tikz-cd}
+\tikzcdset{arrow style=math font} % https://tex.stackexchange.com/questions/300352/equalities-look-broken-with-tikz-cd-and-math-font
+\usetikzlibrary{babel}
+
+% Lists
+\usepackage{enumitem}
+\setenumerate[0]{label=\normalfont(\alph*)}
+
+% Bibliography
+\usepackage[backend=biber, style=authoryear, maxcitenames=2, useprefix]{biblatex}
+\addbibresource{references.bib}
+
+% Title
+\title{\doctitle}
+\author{\docauthor}
+
+\newcommand{\setF}{\mathbb{F}}
+\newcommand{\ev}{\mathrm{ev}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\strucS}{\mathfrak{S}}
+\DeclarePairedDelimiter{\gen}{\langle}{\rangle} % Generating set
+\newcommand{\frakL}{\mathfrak{L}}
+\newcommand{\frakN}{\mathfrak{N}}
+\newcommand{\frakA}{\mathfrak{A}}
+\newcommand{\frakB}{\mathfrak{B}}
+\newcommand{\ab}{\mathit{ab}}
+
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\stab}{Stab}
+
+% Categories
+\newcommand{\cat}[1]{\mathcal{#1}}
+\newcommand{\scat}[1]{\mathbf{#1}} % category supposed to be small
+\newcommand{\ncat}[1]{\mathbf{#1}} % named categories like Set, Top
+
+\newcommand{\catSet}{\ncat{Set}} % Category of sets
+\newcommand{\catGrp}{\ncat{Grp}} % Category of groups
+\newcommand{\catAb}{\ncat{Ab}} % Category of abelian groups
+\newcommand{\catRing}{\ncat{Ring}} % Category of rings
+\newcommand{\catFld}{\ncat{Fld}} % Category of fields
+
+\newcommand{\catMod}[1]{{#1\text{-}\scat{Mod}}}
+\newcommand{\catRMod}{\catMod{R}}
+
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Hom}{\mathrm{Hom}}
+
+\DeclareMathOperator{\chr}{char}
+
+
+%% Framed exercise environment
+
+\mdfdefinestyle{swannexercise}{%
+    skipabove=0.5em plus 0.4em minus 0.2em,
+	skipbelow=0.5em plus 0.4em minus 0.2em,
+	leftmargin=-5pt,
+	rightmargin=-5pt,
+	innerleftmargin=5pt,
+	innerrightmargin=5pt,
+	innertopmargin=5pt,
+	innerbottommargin=4pt,
+	linewidth=0pt,
+	splittopskip=1.2em minus 0.2em,
+	splitbottomskip=0.5em plus 0.2em minus 0.1em,
+	backgroundcolor=backgroundcolor,
+	frametitlebackgroundcolor=titlecolor,
+	frametitlefont={\scshape},
+    theoremseparator={},
+    % theoremspace={},
+	frametitleaboveskip=3pt,
+	frametitlebelowskip=2pt
+}
+
+\mdtheorem[style=swannexercise]{exerciseframed}{Exercise}
+
+\let\oldexerciseframed\exerciseframed
+\renewcommand{\exerciseframed}{%
+  \crefalias{theorem}{exerciseframed}%
+  \oldexerciseframed}
+
+\usepackage{listofitems}
+
+\settocdepth{subsection}
+\renewenvironment{exerciseframed}[1][]{%
+    \setsepchar{.}%
+    \readlist*\mylist{#1}%
+    \def\smalllabel{\mylist[2].\mylist[3]}%
+    \refstepcounter{exerciseframed}%
+    % \addcontentsline{toc}{subsection}{Exercise \smalllabel}%
+    \begin{exerciseframed*}[#1]%
+    \label{ex:#1}%
+}{%
+    \end{exerciseframed*}%
+}
+
+% https://tex.stackexchange.com/a/23491/63353
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+\newcommand{\exref}[1]{%
+    % \setsepchar{.}%
+    % \readlist*\mylist{#1}%
+    % \ifnum \arabic{chapter}=\mylist[1]
+    %     \def\mylabel{\mylist[2].\mylist[3]}%
+    % \else
+    %     \def\mylabel{\RNum{\mylist[1]}.\mylist[2].\mylist[3]}%
+    % \fi
+    \hyperref[ex:#1]{Exercise~#1}%
+}
+
+\theoremstyle{nonumberplain}
+\theoremsymbol{\ensuremath{\square}}
+\newtheorem{solution}{Solution}
+
+\let\oldsolution\solution
+\renewcommand{\solution}{%
+  \crefalias{theorem}{solution}%
+  \oldsolution}
+
+\newcommand{\solutionlabelfont}[1]{{\normalfont\color{linkcolor}#1}}
+\newlist{solutionsec}{enumerate}{1}
+\setlist[solutionsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\solutionlabelfont, label=(\alph*), labelsep=0pt, labelwidth=20pt, itemindent=20pt, align=left, itemsep=10pt}
+
+
+% \renewcommand{\thechapter}{\Roman{chapter}}
+% \renewcommand{\thesection}{\arabic{section}}
+
+\DeclarePairedDelimiter{\ord}{\lvert}{\rvert}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Inn}{Inn}
+
+\usepackage{caption} % Links to figures jump correctly
+\Crefname{figure}{Figure}{Figures}
+
+
+\newenvironment{displaytheorem}{%
+	\begin{displayquote}\itshape%
+}{%
+	\end{displayquote}%
+}
+
+
+\newcommand{\upset}{\operatorname{\uparrow}}
+\newcommand{\downset}{\operatorname{\downarrow}}
+\newcommand{\matgroup}[3]{\mathrm{#1}_{#2}(#3)}
+\newcommand{\GL}[2]{\matgroup{GL}{#1}{#2}}
+\newcommand{\SL}[2]{\matgroup{SL}{#1}{#2}}
+\newcommand{\catGSet}[1][G]{{#1\text{-}\catSet}}
+\newcommand{\frakI}{\mathfrak{I}}
+\newcommand{\field}{\mathbb{F}}
+\let\bigcoprod\coprod
+\renewcommand{\coprod}{\sqcup}
+
+
+\begin{document}
+
+\maketitle
+
+\chapter{Ordered sets}
+
+\newcommand{\catPos}{\ncat{Pos}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\dual}{^{\partial}}
+
+\begin{remarkbreak}[Duality in ordered sets]
+    We elaborate on the duality principle. Consider the elementary language $\calL_\catPos$ of ordered sets. This is a (single sorted) first-order language with identity, variable symbols $x, y, z, \ldots$ and a single binary relation symbol \enquote{$\leq$}. If $\phi$ is a wff of $\calL_\catPos$, then its \emph{dual} $\phi\dual$ is the wff obtained by reversing the order of all inequalities, so that \enquote{$X \leq Y$} becomes \enquote{$Y \leq X$}.
+    
+    Recall that a \emph{sentence} in a first-order language is a wff with no free variables. The duality principle then says the following:
+    %
+    \begin{displaytheorem}
+        Let $\phi$ be a $\calL_\catPos$-sentence. If the order axioms entail $\phi$, then they also entail the dual claim $\phi\dual$.
+    \end{displaytheorem}
+    %
+    In other words, if $\phi$ holds in all ordered sets, then so does $\phi\dual$. We give both a syntactic and a semantic proof of this claim. (Of course either is sufficient since the theory of ordered sets is a first-order theory.)
+
+    First notice that the axioms of ordered sets (reflexivity, antisymmetry and transitivity) are self-dual: That is, each is their own dual. For instance, the transitive axiom states that
+    %
+    \begin{equation*}
+        \forall x \forall y \forall z (x \leq y \land y \leq z \implies x \leq z),
+    \end{equation*}
+    %
+    and this is obviously equivalent to its dual:
+    %
+    \begin{equation*}
+        \forall x \forall y \forall z (y \leq x \land z \leq y \implies z \leq x).
+    \end{equation*}
+    %
+    Now say that there is a (first-order) proof of $\phi$ from the order axioms. Then taking the dual of every wff in this proof yields a proof of the dual claim $\phi\dual$ from the duals of the order axioms. But these are themselves axioms, so the order axioms entail $\phi\dual$.
+
+    For a semantic proof, say that $\phi$ holds in every ordered set $P$. Then $\phi\dual$ holds in every dual $P\dual$ of an ordered set. But these are precisely all the ordered sets, so $\phi\dual$ holds in all ordered sets.
+
+    This obviously extends to set theories augmented with inequality.
+\end{remarkbreak}
+
+
+
+\begin{remarkbreak}[The category of ordered sets]
+    The category $\catPos$ of (partially) ordered sets has as objects posets and as arrows monotone maps. We claim that $\catPos$ has all small products and coproducts.
+
+    Let $A$ be an index set, and let $(P_\alpha)_{\alpha \in A}$ be a collection of posets. We define an order on the Cartesian product $P = \bigprod_{\alpha \in A} P_\alpha$ by letting $(x_\alpha)_{\alpha \in A} \leq (y_\alpha)_{\alpha \in A}$ if and only if $x_\alpha \leq y_\alpha$ for all $\alpha \in A$. The projections $\pi_\alpha \colon P \to P_\alpha$ are then clearly monotone. Notice that the above definition means that for $x,y \in P$ we have $x \leq y$ if and only if $\pi_\alpha(x) \leq \pi_\alpha(y)$ for all $\alpha \in A$. Given monotone maps $\phi_\alpha \colon Q \to P_\alpha$, there is a unique \emph{set map} $\phi \colon Q \to P$ making the diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            && P_\alpha \\
+            Q
+                \ar[r, "\phi", swap, dashed]
+                \ar[urr, "\phi_\alpha", bend left]
+            & P
+                \ar[ur, "\pi_\alpha", swap]
+        \end{tikzcd}
+    \end{equation*}
+    %
+    commute for all $\alpha \in A$. But $\phi$ is clearly also monotone: For $x,y \in Q$ with $x \leq y$, since $\phi_\alpha$ is monotone we have 
+    %
+    \begin{equation*}
+        \pi_\alpha(\phi(x))
+            = \phi_\alpha(x)
+            \leq \phi_\alpha(y)
+            = \pi_\alpha(\phi(y)),
+    \end{equation*}
+    %
+    so $\phi(x) \leq \phi(y)$.
+
+    Next we define an order on the disjoint union $P = \bigcoprod_{\alpha \in A} P_\alpha$. Denoting the canonical injections by $\iota_\alpha \colon P_\alpha \to P$, each element in $P$ is on the form $\iota_\alpha(x)$ for precisely one $\alpha \in A$ and $x \in P_\alpha$. Given another element $\iota_\beta(y)$ in $P$, we thus let $\iota_\alpha(x) \leq \iota_\beta(y)$ if and only if $\alpha = \beta$ and $x \leq y$ in $P_\alpha$. Given monotone maps $\phi_\alpha \colon P_\alpha \to Q$, there is a unique \emph{set map} $\phi \colon P \to Q$ making the diagram
+    %
+    \begin{equation*}
+        \begin{tikzcd}
+            P_\alpha
+                \ar[dr, "\iota_\alpha", swap]
+                \ar[drr, "\phi_\alpha", bend left]
+            \\
+            & P
+                \ar[r, "\phi", swap, dashed]
+            & Q
+        \end{tikzcd}
+    \end{equation*}
+    %
+    commute for all $\alpha \in A$. But $\phi$ is clearly also monotone: If two elements in $P$ are comparable, then they are on the form $\iota_\alpha(x)$ and $\iota_\alpha(y)$ for a common $\alpha \in A$ and $x,y \in P_\alpha$. If $\iota_\alpha(x) \leq \iota_\alpha(y)$, then by definition we must have $x \leq y$ in $P_\alpha$. Since $\phi_\alpha$ is monotone it follows that
+    %
+    \begin{equation*}
+        \phi(\iota_\alpha(x))
+            = \phi_\alpha(x)
+            \leq \phi_\alpha(y)
+            = \phi(\iota_\alpha(y)),
+    \end{equation*}
+    %
+    showing that $\phi$ is monotone.
+
+    For finite coproducts we prefer the notation $P \coprod Q$.
+\end{remarkbreak}
+
+
+\begin{remarkbreak}[Linear sums of ordered sets]
+    We may also define a (potentially) different order on the disjoint union $\bigcoprod_{\alpha \in A} P_\alpha$ in the case where the index set $A$ is itself (partially) ordered. For $x,y \in P$ we let $x \leq y$ if and only if
+    %
+    \begin{enumerate}
+        \item $x,y \in P_\alpha$ for a common $\alpha \in A$, and $x \leq y$ in $P_\alpha$, or
+        \item $x \in P_\alpha$ and $y \in P_\beta$ for distinct $\alpha,\beta \in A$ with $\alpha \leq \beta$.
+    \end{enumerate}
+    %
+    We denote the disjoint union equipped with this order by $\bigoplus_{\alpha \in A} P_\alpha$. In the case where $A = \{1, \ldots n\}$ is finite and totally ordered (in the obvious way) we also write
+    %
+    \begin{equation*}
+        P_1 \oplus \cdots \oplus P_n.
+    \end{equation*}
+    %
+    Despite the additive notation, this operation is clearly \emph{not} commutative, even up to isomorphism.
+
+    Notice that if $A$ has the discrete order, then the second clause above is never satisfied, and the order reduces to the coproduct order.
+\end{remarkbreak}
+
+
+\begin{remark}
+    An injective monotone map is not necessarily an order-embedding: For instance, the identity map $\iota \colon \overline{\mathbf{2}} \to \mathbf{2}$ is obviously injective, but it is not an embedding since $0 < 1$ in $\mathbf{2}$ but not in $\overline{\mathbf{2}}$.
+\end{remark}
+
+\newcommand{\downsets}{\mathcal{O}}
+\newcommand{\op}{^{\mathrm{op}}}
+
+\begin{remarkbreak}[The functor $\downsets$]
+    We claim that $\mathcal{O} \colon \catPos\op \to \catPos$ is a (contravariant) functor, when its action on arrows is given by $\mathcal{O}(\phi) = \phi\preim$, i.e. it is the pullback of $\phi$.
+
+    \exref{1.24} shows that $\mathcal{O}$ is well-defined as a map between categories, and the identity
+    %
+    \begin{equation*}
+        \mathcal{O}(\psi \circ \phi)
+            = (\psi \circ \phi)\preim
+            = \phi\preim \circ \psi\preim
+            = \mathcal{O}(\phi) \circ \mathcal{O}(\psi),
+    \end{equation*}
+    %
+    where $\circ$ denotes composition in $\catPos$ and not in $\catPos\op$, shows that it is indeed a functor (its action on identity arrows is obvious).
+\end{remarkbreak}
+
+
+\begin{exerciseframed}[1.24]
+    Let $P$ and $Q$ be ordered sets.
+    %
+    \begin{enumerate}
+        \item Show that $\phi \colon P \to Q$ is order-preserving if and only if $\phi\preim(A)$ is a down-set in $P$ whenever $A$ is a down-set in $Q$.
+        
+        \item Assume $\phi \colon P \to Q$ is order-preserving. Then, by (i), the map $\phi\preim \colon \downsets(Q) \to \downsets(P)$ is well defined.
+        %
+        \begin{enumerate}
+            \item Show that $\phi$ is an order-embedding if and only if $\phi\preim$ maps $\downsets(Q)$ onto $\downsets(P)$.
+            \item Show that $\phi$ maps onto $Q$ if and only if the map $\phi\preim \colon \downsets(Q) \to \downsets(P)$ is one-to-one.
+        \end{enumerate}
+    \end{enumerate}
+\end{exerciseframed}
+
+\begin{solution}
+\begin{solutionsec}
+    \item First assume that $\phi$ is order-preserving, let $A \subseteq Q$ be a down-set, and let $x \in \phi\preim(A)$ and $y \in P$ with $y \leq x$. Then $\phi(y) \leq \phi(x)$, and since $\phi(x)$ lies in the down-set $A$ we also have $\phi(y) \in A$. Hence $y \in \phi\preim(A)$ as claimed.
+
+    Conversely, let $x,y \in P$ with $x \leq y$. If $A$ is a down-set of $Q$ with $\phi(y) \in A$, then $y$ lies in the down-set $\phi\preim(A)$ in $P$. By Lemma~1.30, $x$ also lies in $\phi\preim(A)$, so $\phi(x) \in A$. The lemma then implies that $\phi(x) \leq \phi(y)$.
+
+    \item Assume that $\phi$ is an order-embedding, and let $B \in \downsets(P)$. We claim that $B = \phi\preim(\downset \phi(B))$. The inclusion \enquote{$\subseteq$} is obvious, so let $x \in P$ with $\phi(x) \in \downset \phi(B)$. Then there is a $y \in B$ such that $\phi(x) \leq \phi(y)$, and this implies that $x \leq y$ since $\phi$ is an embedding. But then $x \in B$, proving the other inclusion, so $\phi\preim$ is surjective.
+    
+    Next assume that $\phi\preim$ is surjective, and consider $x,y \in P$ such that $\phi(x) \leq \phi(y)$. There is a down-set $A$ in $Q$ such that $\downset y = \phi\preim(A)$, so in particular $\phi(y) \in A$. But then $\phi(x) \in A$, so $x \in \downset y$. Hence $x \leq y$ as desired.
+
+    Now assume that $\phi$ is surjective. For $A,B \subseteq Q$ we have
+    %
+    \begin{equation*}
+        A
+            = \phi(\phi\inv(A))
+            = \phi(\phi\inv(B))
+            = B,
+    \end{equation*}
+    %
+    so $\phi\inv$ is injective even on the larger domain $\powerset{Q}$.
+
+    Finally assume that $\phi$ is \emph{not} surjective, and choose an element $y \in Q$ not in the image of $\phi$. Then if $B \subseteq Q$ contains $y$, we have $\phi\inv(B) = \phi\inv(B \setminus \{y\})$, so $\phi\inv$ is not injective on the domain $\powerset{Q}$. Letting $B = \downset y$ we notice that $\downset y \setminus \{y\}$ is also a down-set, so $\phi\inv$ is also not injective on $\downsets(Q)$.
+\end{solutionsec}
+\end{solution}
+
+
+\chapter{Lattices and complete lattices}
+
+\newcommand{\catLat}{\ncat{Lat}}
+\newcommand{\catCLat}{\ncat{CLat}}
+
+
+\begin{remarkbreak}[Duality in lattices]
+    We elaborate on the duality principle for lattices. Consider the elementary language $\calL_\catLat$ of lattices, which is an extension of $\calL_\catPos$: It further includes binary function symbols \enquote{$\join$} and \enquote{$\meet$} (not to be confused with the logical operators), which satisfy the axioms
+    %
+    \begin{equation*}
+        \forall x \forall y \forall z \bigl[ (x \leq z) \land (y \leq z) \Leftrightarrow x \join y \leq z \bigr]
+    \end{equation*}
+    %
+    and
+    %
+    \begin{equation*}
+        \forall x \forall y \forall z \bigl[ (z \leq x) \land (z \leq y) \Leftrightarrow z \leq x \meet y \bigr].
+    \end{equation*}
+    %
+    Notice that there is no uniqueness assumption in the above axioms. Of course, in any model the values of the functions corresponding to the symbols \enquote{$\join$} and \enquote{$\meet$} will be unique given arguments, and we may prove that the axioms above are satisfied only by these values.
+
+    If $\phi$ is a wff of $\calL_\catLat$, then its \emph{dual} $\phi\dual$ is the wff obtained by reversing the order of all inequalities, as well as exchanging \enquote{$\join$} and \enquote{$\meet$}. Notice that the two axioms above are each other's duals.
+    
+    The duality principle for lattices says the following:
+    %
+    \begin{displaytheorem}
+        Let $\phi$ be a $\calL_\catLat$-sentence. If the lattice axioms entail $\phi$, then they also entail the dual claim $\phi\dual$.
+    \end{displaytheorem}
+    %
+    In other words, if $\phi$ holds in all lattices, then so does $\phi\dual$. This follows just as the duality principle for ordered sets, either syntactically or semantically.
+
+    As with ordered sets, this extends to set theories as well.
+\end{remarkbreak}
+
+
+\begin{remarkbreak}[The category of lattices]
+    The category $\catLat$ is the subcategory of $\catPos$ whose objects are lattices and whose arrows are lattice homomorphisms. We claim that this has all small products [TODO coproducts?].
+
+    Let $A$ be an index set, and let $(L_\alpha)_{\alpha \in A}$ be a collection of lattices. Then $L = \bigprod_{\alpha \in A} L_\alpha$ is a product in $\catPos$, and it is easy to show that $L$ is also a lattice, where the lattice operations are given coordinatewise, i.e.
+    %
+    \begin{equation*}
+        (x_\alpha) \join (y_\alpha)
+            = (x_\alpha \join y_\alpha)
+        \quad \text{and} \quad
+        (x_\alpha) \meet (y_\alpha)
+            = (x_\alpha \meet y_\alpha).
+    \end{equation*}
+    %
+    Furthermore, the projections $\pi_\alpha \colon L \to L_\alpha$ are also lattice homomorphisms, since if $x = (x_\alpha)$ and $y = (y_\alpha)$, then
+    %
+    \begin{equation*}
+        \pi_\alpha(x \join y)
+            = \pi_\alpha \bigl( (x_\alpha \join y_\alpha)_{\alpha \in A} \bigr)
+            = x_\alpha \join y_\alpha
+            = \pi_\alpha(x) \join \pi_\alpha(y),
+    \end{equation*}
+    %
+    and similarly for meets. To show that $L$ is a product in $\catLat$, it thus suffices to show that a collection of lattice homomorphisms $f_\alpha \colon L_\alpha \to K$ factors uniquely through $L$. Uniqueness is clear, and the product map $f \colon L \to K$ is a lattice homomorphism since
+    %
+    \begin{align*}
+        f(x \join y)
+            &= f \bigl( (x_\alpha \join y_\alpha)_{\alpha \in A} \bigr)
+             = \bigl( f_\alpha(x_\alpha \join y_\alpha) \bigr)_{\alpha \in A}
+             = \bigl( f_\alpha(x_\alpha) \join f_\alpha(y_\alpha) \bigr)_{\alpha \in A} \\
+            &= \bigl( f_\alpha(x_\alpha) \bigr)_{\alpha \in A} \join \bigl( f_\alpha(y_\alpha) \bigr)_{\alpha \in A}
+             = f(x) \join f(y),
+    \end{align*}
+    %
+    and similarly for meets.
+
+    Denote by $\catCLat$ the (full) subcategory of $\catLat$ whose objects are complete lattices. This category also has all small products, since if $S \subseteq L = \bigprod_{\alpha \in A} L_\alpha$ with all $L_\alpha$ complete, then
+    %
+    \begin{equation*}
+        \bigjoin S
+            = \bigl( \bigjoin \pi_\alpha(S) \bigr)_{\alpha \in A},
+    \end{equation*}
+    %
+    and dually for meets.
+\end{remarkbreak}
+
+
+\begin{remarkbreak}[Linear sums of lattices]
+    Let $(L_\alpha)_{\alpha \in A}$ be a collection of lattices, where the index set $A$ is itself a lattice. We wish to find further constraints on either $A$ or the $L_\alpha$ that ensure that the linear sum $L = \bigoplus_{\alpha \in A} L_\alpha$ is also a lattice.
+    
+    First assume that $A$ is totally ordered. For elements $x,y \in L$, say that $x,y \in L_\alpha$ for a common index $\alpha$. Then the join $x \join y$ in $L$ is simply the join of $x$ and $y$ in $L_\alpha$. If instead $x \in L_\alpha$ and $y \in L_\beta$ for distinct $\alpha,\beta \in A$, then
+    %
+    \begin{equation*}
+        x \join y =
+        \begin{cases}
+            x, & \alpha > \beta, \\
+            y, & \alpha < \beta.
+        \end{cases}
+    \end{equation*}
+    %
+    Meets are given dually. In particular, finite linear sums of lattices are themselves lattices.
+
+    Next, instead assume that each $L_\alpha$ is bounded. Then if $x \in L_\alpha$ and $y \in L_\beta$ for $\alpha \neq \beta$, then $x \join y$ is the zero in $L_{\alpha \join \beta}$. Dually for meets.
+
+    Finally we consider complete lattices. Assume that each $L_\alpha$ is complete, and that $A$ is also complete. Then $L$ is a lattice by the above, and we claim that it is also complete. Let $S \subseteq L$ and define
+    %
+    \begin{equation*}
+        B
+            = \set{\alpha \in A}{\pi_\alpha(S) \neq \emptyset}.
+    \end{equation*}
+    %
+    Letting $\beta = \bigjoin B$ we have $\bigjoin S = \bigjoin \pi_\beta(S)$. Again we in particular see that finite linear sums of complete lattices are complete.
+\end{remarkbreak}
+
+
+\begin{remarkbreak}[Ideals and filters in posets]
+    Ideals and filters may be defined more generally for a partially ordered set $(P,\leq)$. An \emph{ideal} in $P$ is a nonempty subset $I$ that is
+    %
+    \begin{enumerate}
+        \item upward directed: for every $x,y \in I$ there is a $z \in I$ such that $x,y \leq z$; and
+        \item downward closed (i.e. a down-set): for every $x \in P$ and $y \in I$, $x \leq y$ implies that $x \in I$.
+    \end{enumerate}
+    %
+    Dually, a \emph{filter} in $P$ is a nonempty, downward directed up-set.
+
+    If $P$ is also a lattice and $I$ is an ideal in the above sense, then it is also an ideal in the sense of Definition~2.20 (the converse is obvious). For if $x,y \in I$, then there is some $z \in I$ with $x,y \leq z$. But $x \join y \leq z$, so since $I$ is downward closed we also have $x \join y \in I$.
+\end{remarkbreak}
+
+
+\begin{remarkbreak}[Generating ideals and filters]
+    If $P$ is a partially ordered set and $A \subseteq P$, then it is easy to show that $A$ is upward directed if and only if $\downset A$ is upward directed. Thus if $A \neq \emptyset$, then $\downset A$ is an ideal if and only if $A$ is upward directed, and dually for filters. Clearly $\downset A$ is the smallest ideal containing $A$ (compare \exref{2.22}).
+
+    In topology it is common to consider filters in powerset lattices. All filters are usually assumed to be proper in this context. If $X$ is a set, then a \emph{prefilter} or \emph{filter basis} is a nonempty, downward directed collection $\calB$ of nonempty subsets of $X$. It generates the filter $\calF = \upset \calB$, and this is indeed proper since $\emptyset \not\in \calF$. By the above, a filter basis is precisely a collection $\calB \subseteq \powerset{X}$ such that $\upset \calB$ is a (proper) filter.
+\end{remarkbreak}
+
+
+\begin{exerciseframed}[2.6]
+    Let $P$ be an ordered set.
+    %
+    \begin{enumerate}
+        \item Prove that if $A \subseteq P$ and $\bigmeet A$ exists in $P$, then
+        %
+        \begin{equation*}
+            \bigintersect \set{\downset a}{a \in A}
+                = \downset \bigl( \bigmeet A \bigr).
+        \end{equation*}
+
+        \item Formulate and prove the dual result.
+    \end{enumerate}
+\end{exerciseframed}
+
+\begin{solution}
+\begin{solutionsec}
+    \item This is obvious, since $x \leq a$ for all $a \in A$ if and only if $x \leq \bigmeet A$.
+
+    \item The dual result is
+    %
+    \begin{equation*}
+        \bigintersect \set{\upset a}{a \in A}
+            = \upset \bigl( \bigjoin A \bigr),
+    \end{equation*}
+    %
+    whenever $\bigjoin A$ exists in $P$. This follows by duality or by an argument analogous to the above.
+\end{solutionsec}
+\end{solution}
+
+
+\begin{exerciseframed}[2.17]
+    Let $L$ and $K$ be lattices with $0$ and $1$. Show that there exist $a,b \in L \prod K$ such that
+    %
+    \begin{enumerate}
+        \item $\downset a \cong L$ and $\downset b \cong K$,
+        \item $a \meet b = (0, 0)$ and $a \join b = (1, 1)$.
+    \end{enumerate}
+\end{exerciseframed}
+
+\begin{solution}
+    Let $a = (1,0)$ and $b = (0,1)$. Then
+    %
+    \begin{equation*}
+        \downset (1,0)
+            = \set{(x,y) \in L \prod K}{x \leq 1, y \leq 0}
+            = L \prod \{0\}.
+    \end{equation*}
+    %
+    The map $x \mapsto (x,0)$ is clearly an isomorphism\footnote{Indeed, if $c \in K$ is any fixed element, then the map $L \to L \prod K$ given by $x \mapsto (x,c)$ is an injective homomorphism.} $L \to L \prod \{0\}$, proving that $\downset(1,0) \cong L$. Similarly we find that $\downset (0,1) \cong K$.
+
+    Furthermore notice that
+    %
+    \begin{equation*}
+        (1,0) \meet (0,1)
+            = (1 \meet 0, 0 \meet 1)
+            = (0,0)
+    \end{equation*}
+    %
+    and
+    %
+    \begin{equation*}
+        (1,0) \join (0,1)
+            = (1 \join 0, 0 \join 1)
+            = (1,1)
+    \end{equation*}
+    %
+    as desired.
+\end{solution}
+
+
+\begin{exerciseframed}[2.22]
+    Let $L$ be a lattice and let $\emptyset \neq A \subseteq L$. Show that
+    %
+    \begin{equation*}
+        (A] \defn \downset \set{ a_1 \join \cdots \join a_n }{ n \in \naturals, a_1, \ldots, a_n \in A }
+    \end{equation*}
+    %
+    is an ideal and moreover it is contained in any ideal $J$ of $L$ which contains $A$.
+\end{exerciseframed}
+
+\begin{solution}
+    Clearly $(A]$ is a down-set, so it suffices to show that it is closed under binary joins. If $x,y \in (A]$, then by definition there exist $a_1, \ldots, a_n, b_1, \ldots, b_m \in A$ such that
+    %
+    \begin{equation*}
+        x
+            \leq a_1 \join \cdots \join a_n
+        \quad \text{and} \quad
+        y
+            \leq b_1 \join \cdots \join b_m.
+    \end{equation*}
+    %
+    It follows that
+    %
+    \begin{equation*}
+        x \join y
+            \leq a_1 \join \cdots \join a_n \join b_1 \join \cdots \join b_m,
+    \end{equation*}
+    %
+    so $x \join y \in (A]$.
+
+    To show that $(A] \subseteq J$, notice that it suffices (since $J$ is a down-set) to show that all finite joins of elements in $A$ lie in $J$. But this is obvious since $A \subseteq J$ and $J$ is an ideal.
+\end{solution}
+
+
+\begin{exerciseframed}[2.29]
+    Let $P$ be a complete lattice. Prove that there is a topped $\intersect$-structure $\frakL$ on the set $P$ such that $P \cong \frakL$.
+\end{exerciseframed}
+
+\begin{solution}
+    Consider the map $\phi \colon P \to \downsets(P)$ given by $\phi(x) = \downset x$. This is clearly an order-embedding, so restricting its codomain to its image $\frakL \defn \phi(P)$ yields an order isomorphism, hence a lattice isomorphism. It remains to be shown that $\frakL$ is a topped $\intersect$-structure.
+
+    Clearly $\frakL$ is topped since $P = \downset 1$, so it suffices to show that it is an $\intersect$-structure. Let $\{A_i\}_{i \in I}$ be a nonempty family of elements in $\frakL$, and write $A_i = \downset x_i$ for appropriate $x_i \in P$. Now notice that \exref{2.6} implies that
+    %
+    \begin{equation*}
+        \bigintersect_{i \in I} A_i
+            = \bigintersect_{i \in I} \downset x_i
+            = \downset \Bigl( \bigmeet_{i \in I} x_i \Bigr)
+            \in \frakL
+    \end{equation*}
+    %
+    as desired.
+\end{solution}
+
+\newcommand{\Sub}{\operatorname{Sub}}
+
+\begin{exerciseframed}[2.31]
+    Let $G_1$ and $G_2$ be finite groups such that $\gcd(\card{G_1}, \card{G_2}) = 1$. Show that
+    %
+    \begin{equation*}
+        \Sub(G_1 \prod G_2) \cong \Sub G_1 \prod \Sub G_2,
+    \end{equation*}
+    %
+    where on the left we have the usual coordinatewise product of groups and on the right the coordinatewise product of ordered sets.
+\end{exerciseframed}
+
+\begin{solution}
+    Write $n_i = \card{G_i}$. If $H$ is a subgroup of $G_1 \prod G_2$, then $\card{H} = k_1 k_2$ with $k_i \mid n_i$. Consider the subgroups $H_i = \pi_i(H)$ of $G_i$. Then $\card{H_i}$ divides both $n_i$ and $\card{H}$, so since $\gcd(n_1,n_2) = 1$ it divides $k_i$. It follows that $\card{H_1 \prod H_2} \leq k_1 k_2 = \card{H}$, and the opposite inequality follows since $H \subseteq H_1 \prod H_2$. Hence this inclusion is in fact an equality, so the map
+    %
+    \begin{align*}
+        \Sub(G_1 \prod G_2) &\to \Sub G_1 \prod \Sub G_2, \\
+        H &\mapsto \pi_1(H) \prod \pi_2(H),
+    \end{align*}
+    %
+    is a bijection. It is also clearly monotone, proving the claim.
+\end{solution}
+
+\newcommand{\sgn}{\mathrm{sgn}}
+% TODO: cycle notation
+
+\begin{remark}
+    The assumption that $\card{G_1}$ and $\card{G_2}$ be relatively prime is necessary. This hinges on the fact that a subgroup of a product is not necessarily a product of subgroups of each factor. For instance, the subgroup $\gen{(1,1)}$ of $\ints/2\ints \prod \ints/2\ints$ is clearly not a product of subgroups. It is, however, isomorphic to the subgroup $\ints/2\ints \prod \{0\}$, but we can find examples of subgroups of products that are not even isomorphic to any product of subgroups:
+
+    Consider for instance the subgroup of $S_3 \prod S_3$ given by the kernel $K$ of the homomorphism $\phi \colon S_3 \prod S_3 \to \{\pm 1\}$ given by $\phi(g,h) = \sgn(gh)$. Since $\phi$ is surjective we have $[S_3 \prod S_3 : K] = 2$, so $\card{K} = 18$. Now assume towards a contradiction that $K$ is isomorphic to a product of two subgroups of $S_3$. By Lagrange's theorem, the possible orders of such a subgroup are $1,2,3,6$. Hence one factor must be $S_3$ itself, and the other must be of order $3$, i.e. it must be $A_3$. Hence $K \cong S_3 \prod A_3$. Now notice that $S_3 \prod A_3$ contains an element of order $6$, e.g. $((1\,2), (1\,2\,3))$, but $K$ does not: For an element of order $6$ in $S_3 \prod S_3$ must be a pair $(\tau,\sigma)$, where $\tau$ is a transposition and $\sigma$ a $3$-cycle, and $\sgn(\tau\sigma) = -1$.
+\end{remark}
+
+
+\begin{exerciseframed}[2.32]
+    \begin{enumerate}
+        \item Use the Knaster--Tarski Fixpoint Theorem to prove Banach's Decomposition Theorem:
+        %
+        \begin{displaytheorem}
+            Let $X$ and $Y$ be sets and let $f \colon X \to Y$ and $g \colon Y \to X$ be maps. Then there exist disjoint subsets $X_1$ and $X_2$ of $X$ and disjoint subsets $Y_1$ and $Y_2$ of $Y$ such that $f(X_1) = Y_1$, $g(Y_2) = X_2$, $X = X_1 \union X_2$ and $Y = Y_1 \union Y_2$.
+        \end{displaytheorem}
+
+        \item Use (i) to obtain the Schröder--Bernstein Theorem:
+        %
+        \begin{displaytheorem}
+            Let $X$ and $Y$ be sets and suppose there exist one-to-one maps $f \colon X \to Y$ and $g \colon Y \to X$. Then there exists a bijective map $h$ from $X$ onto $Y$.
+        \end{displaytheorem}
+    \end{enumerate}
+\end{exerciseframed}
+
+\begin{solution}
+\begin{solutionsec}
+    \item Consider the map $F \colon \powerset{X} \to \powerset{X}$ given by $F(S) = X \setminus g(Y \setminus f(S))$. This is easily seen to be monotone, so the Knaster--Tarski fixpoint theorem yields the existence of a fixpoint $X_1 \subseteq X$. Letting $Y_1 = f(X_1)$, $Y_2 = Y \setminus Y_1$ and $X_2 = g(Y_2)$, the fact that $F(X_1) = X_1$ implies that
+    %
+    \begin{equation*}
+        X_1
+            = X \setminus g(Y \setminus f(X_1))
+            = X \setminus g(Y \setminus Y_1)
+            = X \setminus g(Y_2)
+            = X \setminus X_2,
+    \end{equation*}
+    %
+    which proves the claim.
+
+    \item Let $X_1, X_2, Y_1, Y_2$ be a Banach decomposition. Since $g$ is injective it restricts to a bijection from $Y_2$ onto $X_2$. Let $g\inv$ denote the inverse of this restriction and define $h$ by
+    %
+    \begin{equation*}
+        h(x) =
+        \begin{cases}
+            f(x),       & x \in X_1, \\
+            g\inv(x),   & x \in X_2.
+        \end{cases}
+    \end{equation*}
+    %
+    This is easily seen to be both injective and surjective.
+\end{solutionsec}
+\end{solution}
+
+
+\begin{exerciseframed}[2.34]
+    Prove that $P \prod Q$ satisfies (ACC) if and only if both $P$ and $Q$ do.
+\end{exerciseframed}
+
+\begin{solution}
+    Assume that $P$ and $Q$ satisfy (ACC), and let
+    %
+    \begin{equation*}
+        (x_1,y_1)
+            \leq (x_2,y_2)
+            \leq \cdots
+            \leq (x_n,y_n)
+            \leq \cdots
+    \end{equation*}
+    %
+    be a sequence in $P \prod Q$. By definition of the product order, this implies that $x_1 \leq x_2 \leq \cdots$ and $y_1 \leq y_2 \leq \cdots$. But then there exist $k_1,k_2 \in \naturals$ such that $x_{k_1} = x_{k_1+1} = \ldots$ and $y_{k_2} = y_{k_2+1} = \ldots$. Letting $k = \max\{k_1,k_2\}$ we thus have
+    %
+    \begin{equation*}
+        (x_k,y_k)
+            = (x_{k+1},y_{k+1})
+            = \ldots,
+    \end{equation*}
+    %
+    so $P \prod Q$ also satisfies (ACC).
+
+    Conversely, assume that $P \prod Q$ satisfies (ACC), and let $x_1 \leq x_2 \leq \cdots$ be a sequence in $P$. If $y$ is any element of $Q$, this implies that $(x_1,y) \leq (x_2,y) \leq \cdots$ in $P \prod Q$. Hence we must have $x_k = x_{k+1} = \ldots$ for some $k \in \naturals$, so $P$ satisfies (ACC). Obviously so does $Q$.
+\end{solution}
+
+
+\newcommand{\length}{\ell}
+
+\begin{exerciseframed}[2.35]
+    Let $P$ and $Q$ be ordered sets of finite length. Prove that
+    %
+    \begin{equation*}
+        \length(P \prod Q)
+            = \length(P) + \length(Q).
+    \end{equation*}
+\end{exerciseframed}
+
+\begin{solution}
+    Write $n = \length(P)$ and $m = \length(Q)$ and let $x_0 < x_1 < \cdots < x_n$ and $y_0 < y_1 < \cdots y_m$ be chains in $P$ and $Q$ respectively. Then
+    %
+    \begin{equation*}
+        (x_0,y_0)
+            < (x_1,y_0)
+            < \cdots
+            < (x_n,y_0)
+            < (x_n,y_1)
+            < \cdots
+            < (x_n,y_m)
+    \end{equation*}
+    %
+    is a chain in $P \prod Q$ of length $n+m$, so $\length(P \prod Q) \geq n+m$. To prove the other inequality, let
+    %
+    \begin{equation*}
+        (x_0,y_0)
+            < (x_1,y_1)
+            < \cdots
+            < (x_k,y_k)
+    \end{equation*}
+    %
+    be a chain in $P \prod Q$ of length $k$. For each $i = 1, \ldots, k$ we must have either $x_{i-1} < x_i$ or $y_{i-1} < y_i$. Let $I$ be the set of $i$ such that the former holds, and let $J$ be the set of $i$ such that the latter holds. Then $\set{x_i}{i \in I}$ is a chain in $P$ of length $\card{I}$, and $\set{y_i}{i \in J}$ is a chain in $Q$ of length $\card{J}$, so we must have $\card{I} \leq n$ and $\card{J} \leq m$. Since each $i$ lies in either $I$ or $J$ we have
+    %
+    \begin{equation*}
+        k
+            \leq \card{I} + \card{J}
+            \leq n + m,
+    \end{equation*}
+    %
+    which implies that $\length(P \prod Q) \leq n + m$ as desired.
+\end{solution}
+
+
+\begin{exerciseframed}[2.37]
+    Let $L$ be a lattice.
+    %
+    \begin{enumerate}
+        \item Let $J_1 \subseteq J_2 \subseteq \cdots$ be a chain of ideals of $L$. Show that their union $\bigunion_{n \in \naturals} J_n$ is an ideal of $L$.
+        \item Show that every ideal of $L$ is principal if and only if $L$ satisfies (ACC).
+    \end{enumerate}
+\end{exerciseframed}
+
+\begin{solution}
+\begin{solutionsec}
+    \item If $a,b \in J = \bigunion_{n \in \naturals} J_n$, then $a \in J_n$ and $b \in J_m$ for some $n,m \in \naturals$. But then $a,b \in J_{n \join m} \subseteq J$ as required. Furthermore, if $a \in L$ and $b \in J_m$ with $a \leq b$, then $a \in J_m \subseteq J$.
+    
+    \item First assume that every ideal in $L$ is principal, and let $x_1 \leq x_2 \leq \cdots$ be a chain in $L$. Then there is an inclusion $\downset x_1 \subseteq \downset x_2 \subseteq \cdots$ of ideals, and the above shows that $J = \bigunion_{n\in\naturals} (\downset x_n)$ is also an ideal. Thus there is an $a \in L$ such that $J = \downset a$. But then $a \in \downset x_n$ for some $n \in \naturals$, and since $a$ is the maximum of $J$ we must have $a = x_n$. Hence this chain is of finite length.
+    
+    Now assume that $L$ satisfies (ACC) and let $J$ be an ideal in $L$. By Lemma~2.39, $J$ has a maximal element $a$. If $x \in J$, then since $J$ is an ideal we have $x \join a \in J$. Obviously $a \leq x \join a$, and since $a$ is maximal in $J$ we also have $x \join a \leq a$, so $x \join a = a$. Hence $x \leq a$, so $a$ is in fact the maximum of $J$. It follows that $J \subseteq \downset a$, and the opposite inequality is obvious by minimality of $\downset a$.
+\end{solutionsec}
+\end{solution}
+
+
+\chapter{Formal concept analysis}
+
+\chapter{Modular, distributive and Boolean lattices}
+
+\begin{exerciseframed}[4.9]
+    Let $L$ be a distributive lattice and let $a,b,c \in L$. Prove that
+    \begin{equation*}
+        (a \join b = c \join b \text{ and } a \meet b = c \meet b)
+            \quad \implies \quad a = c.
+    \end{equation*}
+\end{exerciseframed}
+
+\begin{solution}
+    This follows from the calculation
+    %
+    \begin{align*}
+        a
+            &= a \meet (a \join b) \\
+            &= a \meet (c \join b) \\
+            &= (a \meet c) \join (a \meet b) \\
+            &= (a \meet c) \join (c \meet b) \\
+            &= c \meet (a \join b) \\
+            &= c \meet (c \join b) \\
+            &= c.
+    \end{align*}
+\end{solution}
+
+
+\begin{exerciseframed}[4.12]
+    \begin{enumerate}
+        \item Prove that a lattice $L$ is distributive if and only if for each $a \in L$, the map $f_a \colon L \to \downset a \prod \upset a$ defined by
+        %
+        \begin{equation*}
+            f_a(x)
+                = (x \meet a, x \join a)
+                \quad \text{for all $x \in L$}
+        \end{equation*}
+        %
+        is a one-to-one homomorphism.
+
+        \item Prove that, if $L$ is distributive and possesses 0 and 1, then $f_a$ is an isomorphism if and only if $a$ has
+        a complement in $L$.
+    \end{enumerate}
+\end{exerciseframed}
+
+\begin{solution}
+\begin{solutionsec}
+    \item First assume that $L$ is distributive and fix $a \in L$. For $x,y \in L$ we then have
+    %
+    \begin{align*}
+        f_a(x \meet y)
+            &= \bigl( (x \meet y) \meet a, (x \meet y) \join a \bigr) \\
+            &= \bigl( (x \meet a) \meet (y \meet a), (x \join a) \meet (y \join a) \bigr) \\
+            &= (x \meet a, x \join a) \meet (y \meet a, y \join a) \\
+            &= f_a(x) \meet f_a(y),
+    \end{align*}
+    %
+    and similarly for joins. Thus $f_a$ is a homomorphism. Injectivity follows immediately from \exref{4.9}.
+
+    Conversely, given $a,b,c \in L$ and using that $f_a$ is a homomorphism, it follows that
+    %
+    \begin{equation*}
+        f_a \bigl( (a \meet b) \join (a \meet c) \bigr)
+            = \bigl( (a \meet b) \join (a \meet c), a \bigr),
+    \end{equation*}
+    %
+    and that
+    %
+    \begin{equation*}
+        f_a \bigl( a \meet (b \join c) \bigr)
+            = \bigl( a \meet ((a \meet b) \join (a \meet c)), a \bigr)
+            = \bigl( (a \meet b) \join (a \meet c), a \bigr),
+    \end{equation*}
+    %
+    where the second equality follows since $(a \meet b) \join (a \meet c) \leq a$. Distributivity then follows since $f_a$ is injective.
+
+    \item Since $f_a$ is already shown to be an injective homomorphism, it is an isomorphism if and only if it is surjective. First, if $f_a$ is surjective then there exists a $b \in L$ such that
+    %
+    \begin{equation*}
+        (0,1)
+            = f_a(b)
+            = (b \meet a, b \join a),
+    \end{equation*}
+    %
+    which precisely says that $b$ is a complement of $a$.
+
+    Conversely, say that $a$ has a complement $a'$ in $L$, and let $c \in \downset a$ and $d \in \upset a$. Then $c \leq d$, so since $L$ is modular we have
+    %
+    \begin{equation*}
+        x
+            \defn c \join (a' \meet d)
+            = (c \join a') \meet d.
+    \end{equation*}
+    %
+    We furthermore have
+    %
+    \begin{equation*}
+        \bigl( (c \join a') \meet d \bigr) \meet a
+            = \bigl( (c \meet a) \join (a' \meet a) \bigr) \meet d
+            = (c \join 0) \meet d
+            = c
+    \end{equation*}
+    %
+    and
+    %
+    \begin{equation*}
+        \bigl( c \join (a' \meet d ) \bigr) \join a
+            = c \join \bigl( (a' \join a) \meet (d \join a) \bigr)
+            = a \join (1 \meet d)
+            = d.
+    \end{equation*}
+    %
+    Hence $f_a(x) = (c,d)$, so $f_a$ is surjective.
+\end{solutionsec}
+\end{solution}
+
+
+\chapter{Nets and filters}
+
+[These notes should probably be factored out somewhere -- maybe the topology/measure theory notes?]
+
+\section{Basic theory of nets}
+
+If $P$ is a preordered set, then a subset $A \subseteq P$ is said to be \emph{cofinal} in $P$ if for every $x \in P$ there is a $y \in A$ with $x \leq y$. A function $f \colon P \to Q$ between ordered sets is said to be \emph{cofinal} if $f(P)$ is cofinal in $Q$.
+
+
+\newcommand{\mynet}{u}
+\newcommand{\subnet}{v}
+\newcommand{\altnet}{v}
+\newcommand{\newnet}{w}
+\newcommand{\mylimit}{x}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\nhoods}[1]{\calN_{#1}}
+\newcommand{\tail}[2][]{T^{#1}_{#2}}
+\newcommand{\tails}[1]{\calT_{#1}}
+
+\begin{definition}[Nets]
+    Let $X$ be a set. A \emph{net} in $X$ is a function $\mynet \colon I \to X$, where $I$ is a nonempty directed set. The value $\mynet(i)$ at $i \in I$ is usually denoted $\mynet_i$.
+    
+    Given $i \in I$, the set
+    %
+    \begin{equation*}
+        \tail{i}
+            = \tail[\mynet]{i}
+            = \set{\mynet_j \in A}{j \geq i}
+    \end{equation*}
+    %
+    is called the \emph{tail of $\mynet$ following $i$}. The collection of tails of $\mynet$ is denoted $\tails{\mynet}$.
+\end{definition}
+%
+Some authors allow the domain $I$ to be empty (e.g. Folland, Willard), while others do not (e.g. Kelley, Beardon, who both require even directed sets to be nonempty). We require $I$ to be nonempty since it makes the correspondence between nets and filters nicer, since filters are required to be nonempty.
+
+Notice that $\tails{\mynet}$ is downward directed with respect to set inclusion: For $i, j \in I$ there is a $k \in A$ with $i, j \leq k$, and hence $\tail{k} \subseteq \tail{i} \intersect \tail{j}$. Intuitively speaking, every pair of tails of $\mynet$ \enquote{meet} somewhere in the future.
+
+\begin{definition}
+    Let $\mynet \colon I \to X$ be a net, and let $A \subseteq X$.
+    %
+    \begin{enumerate}
+        \item The net $\mynet$ is \emph{eventually in $A$} if there exists a tail $T \in \tails{\mynet}$ such that $T \subseteq A$. Equivalently, there exists an $i \in I$ such that $\mynet_j \in A$ for all $j \geq i$.
+
+        \item The net $\mynet$ is \emph{frequently/cofinally in $A$} if $T \intersect A \neq \emptyset$ for all $T \in \tails{\mynet}$. Equivalently, for all $i \in I$ there exists a $j \geq i$ such that $\mynet_j \in E$, i.e. $\mynet\preim(A)$ is cofinal in $I$.
+    \end{enumerate}
+\end{definition}
+%
+In particular, since $\tails{\mynet}$ is downward directed, if $\mynet$ is eventually in $A$ then it is frequently in $A$. Notice also that $\mynet$ is \emph{not} eventually in $A$ if and only if it is frequently in $X \setminus A$.
+
+\begin{definition}
+    Let $\mynet \colon I \to X$ be a net in a topological space $X$, and let $\mylimit \in X$.
+    %
+    \begin{enumerate}
+        \item The net $\mynet$ \emph{converges to $\mylimit$} if $\mynet$ is eventually in $N$ for all $N \in \nhoods{\mylimit}$, i.e. if
+        %
+        \begin{equation*}
+            \forall N \in \nhoods{\mylimit} \; \exists T \in \tails{\mynet} \colon T \subseteq N.
+        \end{equation*}
+        %
+        In this case we use either of the following notations:
+        %
+        \begin{equation*}
+            \mynet \to \mylimit, \quad
+            \mynet_i \to \mylimit, \quad
+            \lim \mynet = \mylimit, \quad
+            \lim_{i \in I} \mynet_i = \mylimit.
+        \end{equation*}
+
+        \item The point $\mylimit$ is a \emph{cluster point} of $\mynet$ if $\mynet$ is frequently in $N$ for all $N \in \nhoods{\mylimit}$, i.e. if
+        %
+        \begin{equation*}
+            \forall N \in \nhoods{\mylimit}, T \in \tails{\mynet} \colon T \intersect N \neq \emptyset.
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+%
+Thus if $\mynet \to \mylimit$, then $\mylimit$ is a cluster point of $\mynet$.
+
+Next we consider \emph{subnets}. There are at least three different, non-equivalent definitions of subnets:
+
+\begin{definition}[Subnets]
+    \label{def:subnets}
+    Let $\mynet \colon I \to X$ and $\subnet \colon J \to X$ be nets in a set $X$.
+    
+    \begin{enumerate}
+        \item We say that $\subnet$ is a \emph{(Aarnes--Andenæs) subnet} of $\mynet$ if for all $A \subseteq X$,
+        %
+        \begin{equation*}
+            \text{$\mynet$ is eventually in $A$}
+            \quad \implies \quad
+            \text{$\subnet$ is eventually in $A$},
+        \end{equation*}
+        %
+        or equivalently if
+        %
+        \begin{equation*}
+            \text{$\subnet$ is frequently in $A$}
+            \quad \implies \quad
+            \text{$\mynet$ is frequently in $A$}.
+        \end{equation*}
+
+        \item We say that $\subnet$ is a \emph{Kelley subnet} of $\mynet$ if there exists a function $\phi \colon J \to I$ such that
+        %
+        \begin{enumerate}
+            \item $\subnet = \mynet \circ \phi$, and
+            \item for each $i_0 \in I$ there is a $j_0 \in J$ such that $j \geq j_0$ implies that $\phi(j) \geq i_0$.
+        \end{enumerate}
+
+        \item We say that $\subnet$ is a \emph{Willard subnet} of $\mynet$ if there exists a function $\phi \colon J \to I$ such that
+        %
+        \begin{enumerate}
+            \item $\subnet = \mynet \circ \phi$,
+            \item $\phi$ is monotone, and
+            \item $\phi$ is cofinal, i.e. for each $i_0 \in I$ there is a $j_0 \in J$ such that $\phi(j_0) \geq i_0$.
+        \end{enumerate}
+    \end{enumerate}
+\end{definition}
+%
+It will turn out that Aarnes--Andenæs subnets (henceforth simply \enquote{AA subnets}) will be most important to us. We may equip the class of nets in a set $X$ with a preorder by letting $\subnet \leq \mynet$ if $\subnet$ is an AA subnet of $\mynet$. If both $\subnet \leq \mynet$ and $\mynet \leq \subnet$, then we say that $\mynet$ and $\subnet$ are \emph{equivalent} and write $\mynet \sim \subnet$. As with sequences, if $\mynet \to \mylimit$ and $\subnet$ is a subnet (of any kind) of $\mynet$, then also $\subnet \to \mylimit$. This is clear for AA subnets, and will follow for the other two kinds from the following remark:
+
+\begin{remarkbreak}[Relationship between definitions of subnets]
+    We claim that each Willard subnet is a Kelley subnet, and each Kelley subnet is an AA subnet. For the first claim, let $i_0 \in I$ and choose $j_0$ in accordance with [ref?]. For $j \in J$ with $j \geq j_0$ we thus have
+    %
+    \begin{equation*}
+        \phi(j)
+            \geq \phi(j_0)
+            \geq i_0
+    \end{equation*}
+    %
+    as desired.
+
+    Next assume that $\subnet$ is a Kelley subnet of $\mynet$, assume that $\subnet$ is frequently in some $A \subseteq X$, and let $i_0 \in I$. Choose $j_0 \in J$ such that $j \geq j_0$ implies $\phi(j) \geq i_0$. There is some $j \in J$ such that $\mynet_{\phi(j)} = \subnet_j \in A$. Hence $\mynet$ is frequently in $A$, so $\subnet$ is an AA subnet.
+
+    [TODO: converses don't hold, see Schachter.]
+\end{remarkbreak}
+
+\begin{lemma}
+    Let $\mynet \colon I \to X$ and $\altnet \colon J \to X$ be nets in a set $X$ with the property that $T_1 \intersect T_2 \neq \emptyset$ for all $T_1 \in \tails{\mynet}$ and $\tails{\altnet}$. Then $\mynet$ and $\altnet$ have a common Willard subnet $\newnet$.
+
+    Furthermore, $\newnet$ can be chosen to be maximal among common AA subnets of $\mynet$ and $\altnet$: That is, any common AA subnet of $\mynet$ and $\altnet$ is also an AA subnet of $\newnet$.
+\end{lemma}
+%
+We have stated the lemma in terms of two nets, but the proof generalises in an obvious way to any finite number of nets.
+
+\begin{proof}
+    For $i_0 \in I$ and $j_0 \in J$, notice that
+    %
+    \begin{equation*}
+        \set{x \in X}{x = \mynet_i = \altnet_j \text{ for some } i \geq i_0, j \geq j_0}
+            = \tail[\mynet]{i_0} \intersect \tail[\altnet]{j_0}
+            \neq \emptyset.
+    \end{equation*}
+    %
+    Hence the set
+    %
+    \begin{equation*}
+        K
+            = \set{(i,j) \in I \prod J}{\mynet_i = \altnet_j}
+    \end{equation*}
+    %
+    is nonempty, and if $I \prod J$ is equipped with the product order, it is easy to see that $K$ is directed. Define a net $\newnet \colon K \to X$ by defining $\newnet_{(i,j)}$ as the common value $\mynet_i = \altnet_j$. Then $\newnet = \mynet \circ \pi_1|_K$, where $\pi_1 \colon I \prod J \to I$ is the projection onto $I$. This trivially satisfies the conditions in [TODO Willard subnet ref], showing that $\newnet$ is a Willard subnet of both $\mynet$ and $\altnet$.
+    
+    It is also easy to see that
+    %
+    \begin{equation*}
+        \tail[\newnet]{(i,j)}
+            = \tail[\mynet]{i} \intersect \tail[\altnet]{j}
+    \end{equation*}
+    %
+    for all $(i,j) \in K$. [TODO] The theory of filters then shows that $\newnet$ is maximal as claimed.
+\end{proof}
+
+
+\begin{corollary}
+    Let $\mynet$ be a net, and let $\subnet$ be an AA subnet. Then $\mynet$ has a Willard subnet that is equivalent to $\subnet$.
+\end{corollary}
+
+\begin{proof}
+    Notice that $\mynet$ and $\subnet$ have a common AA subnet, namely $\subnet$. But [TODO ref] yields a maximal common Willard subnet $\newnet$, and by maximality $\subnet$ is also a subnet of $\newnet$. Hence these are equivalent as claimed.
+\end{proof}
+%
+Thus the three types of subnets can be used interchangably, insofar as the properties of a subnet are invariant up to equivalence. We will use AA subnets since their correspondence with superfilters is nicer, and henceforth \enquote{subnet} will mean AA subnet.
+
+
+
+\section{Basic theory of filters}
+
+\begin{definition}[Filters]
+    Let $X$ be a set. A \emph{filter on $X$} is a proper filter $\calF$ on the powerset $\powerset{X}$ ordered by inclusion. That is, $\calF$ is a nonempty collection of subsets of $X$ that is
+    %
+    \begin{enumerate}
+        \item proper, i.e. $\emptyset \not\in \calF$,
+        \item downward directed, i.e., for $F_1, F_2 \in \calF$ there is an $F_3 \in \calF$ such that $F_3 \subseteq F_1, F_2$, and
+        \item upward closed, i.e. $\calF = \calF^\uparrow$.
+    \end{enumerate}
+\end{definition}
+%
+The condition (c) means that if $F \in F$ and $F \subseteq G$, then $G \in \calF$. By [TODO remark ref], in the presence of (c) condition (b) [TODO links] is equivalent to $\calF$ being closed under (binary) intersections.
+
+We want a way to generate filters from less restrictive collections of sets. \exref{2.22} gives a general way to do this, and we notice that if $\emptyset \neq \calB \subseteq \powerset{X}$ is already downward directed, then the filter generated by $\calB$ is just $\calB^\uparrow$. In fact, it is trivial to show that (in a general lattice) $\calB$ is downward directed if and only if $\calB^\uparrow$ is, so $\calB^\uparrow$ is a (not necessarily proper) filter if and only if $\calB$ is downward directed. If we further require that $\calB$ not contain the empty set, then $\calB^\uparrow$ is a filter in the above sense. This motivates the following definition:
+
+\begin{definition}[Filter bases]
+    Let $X$ be a set. A \emph{filter basis on $X$} is a nonempty collection $\calB$ of subsets of $X$ that is
+    %
+    \begin{enumerate}
+        \item proper, and
+        \item downward directed.
+    \end{enumerate}
+    %
+    The filter \emph{generated by $\calB$} is the filter $\calB^\uparrow$. If $\calF$ is a filter on $X$ and $\calF = \calB^\uparrow$, then $\calB$ is called a \emph{basis} for $\calF$.
+\end{definition}
+
+If $X$ is a topological space and $\mylimit \in X$, then we denote the family of neighbourhoods of $\mylimit$ by $\nhoods{\mylimit}$. Notice that this is a filter on $X$.
+
+\begin{definition}
+    Let $\calF$ be a filter on a topological space $X$, and let $\mylimit \in X$.
+    %
+    \begin{enumerate}
+        \item The filter $\calF$ \emph{converges to $\mylimit$} if $\nhoods{\mylimit} \subseteq \calF$. In this case we write $\calF \to \mylimit$.
+        
+        \item The point $\mylimit$ is called a \emph{cluster point} of $\calF$ if
+        %
+        \begin{equation*}
+            \forall N \in \nhoods{\mylimit}, F \in \calF \colon F \intersect N \neq \emptyset.
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+%
+Thus if $\calF \to \mylimit$, then $\mylimit$ is a cluster point of $\calF$. Notice the similarity between the definition of cluster points for nets and filters respectively.
+
+\begin{remark}
+    \label{rem:filter-cluster-points}
+    Notice also that if $\calB$ is a basis for the filter $\calF$ and $\nhoods{\mylimit} \subseteq \calB$, then $\calF \to \mylimit$. Furthermore, for every $F \in \calF$ there is a $B \in \calB$ with $B \subseteq F$. So if $B \intersect N \neq \emptyset$ then also $F \intersect N \neq \emptyset$. Hence we may also replace $\calF$ with $\calB$ in (b) [TODO ref].
+\end{remark}
+
+In the theory of filters, the concept corresponding to subnets is that of \emph{superfilters}:
+
+\begin{definition}[Superfilters]
+    Let $\calF$ and $\calG$ be filters on the same set $X$. We say that $\calG$ is a \emph{superfilter} of $\calF$ if $\calF \subseteq \calG$.
+\end{definition}
+%
+We sometimes also say that $\calF$ is a \emph{subfilter} of $\calG$, or that $\calF$ is \emph{finer} than $\calG$ and $\calG$ \emph{courser} than $\calF$. The class of filters on a fixed set is of course partially ordered by inclusion.
+
+Notice that if $\calF \to \mylimit$ and $\calG$ is a superfilter of $\calF$, then also $\calG \to \mylimit$ as we would expect if superfilters are to play the role of subnets.
+
+
+\section{Generating nets and filters}
+
+\newcommand{\filter}{\mathfrak{F}}
+\newcommand{\net}{\mathfrak{N}}
+
+\newcommand{\evfilt}[1]{\Phi_{#1}}
+
+We wish to study the correspondence between nets and filters on a fixed set $X$. Given a net $\mynet \colon I \to X$, recall that the collection $\tails{\mynet}$ of tails of $\mynet$ is downward directed, so $(\tails{\mynet})^\uparrow$ is indeed a filter, namely the smallest filter containing all tails of $\mynet$. We call this the \emph{eventuality filter} of $\mynet$ and denote it by $\evfilt{\mynet}$.
+
+
+
+Given a net we wish to construct a filter, and vice-versa.
+
+
+\begin{definition}[Derived filters]
+    Let $\mynet \colon I \to X$ be a net in a set $X$. The \emph{derived filter} of $\mynet$ is the filter $\filter(\mynet)$ given by $(\tails{\mynet})^\uparrow$. We say that $\filter(\mynet)$ is \emph{derived from} $\mynet$.
+\end{definition}
+%
+Recall that the collection $\tails{\mynet}$ of tails of $\mynet$ is downward directed, so $(\tails{\mynet})^\uparrow$ is indeed a filter, namely the smallest filter containing all tails of $\mynet$. We also call $\filter(\mynet)$ the \emph{eventuality filter} of $\mynet$ due to [TODO ref].
+
+\begin{definition}[Associated nets]
+    Let $\calF$ be a filter on a set $X$. Define a direction on the set
+    %
+    \begin{equation*}
+        I
+            = \set{(x,F)}{x \in F \in \calF}
+    \end{equation*}
+    %
+    by letting $(x,F) \leq (y,G)$ if $G \subseteq F$. The \emph{net associated to $\calF$} is the net $\net(\calF) \colon I \to X$ given by $\net(\calF)_{(x,F)} = x$.
+\end{definition}
+
+This defines a map $\filter$ from nets to filters, and a map $\net$ from filters to nets. It turns out that these constructions are almost inverses of each other:
+
+\begin{proposition}
+    Let $\calF$ a filter on a set $X$. Then $\calT_{\net(\calF)} = \calF$, and in particular
+    %
+    \begin{equation*}
+        \calF
+            = \filter(\net(\calF)).
+    \end{equation*}
+\end{proposition}
+
+\begin{proof}
+    For any $F \in \calF$ and $x \in F$ we have
+    %
+    \begin{equation*}
+        T_{(x,F)}
+            = \set{ \net(\calF)_{(y,G)} }{ y \in G \subseteq F }
+            = \set{ y }{ y \in G \subseteq F }
+            = F,
+    \end{equation*}
+    %
+    so each tail lies in $\calF$, and every element in $\calF$ is a tail. But then
+    %
+    \begin{equation*}
+        \filter(\net(\calF))
+            = (\calT_{\net(\calF)})^\uparrow
+            = \calF^\uparrow
+            = \calF,
+    \end{equation*}
+    %
+    since $\calF$ is already a filter.
+\end{proof}
+%
+In other words, $\filter$ is surjective and $\net$ is injective. We will see later [TODO reference] that convergence of nets and filters are preserved by these operations, so two nets give rise to the same filter if they have the same convergence properties. For instance, the sequences $x_1, x_2, \ldots$ and $x_2, x_3, \ldots$ have the same convergence properties, so they should generate the same filter.
+
+The fundamental result relating the properties of nets and filters is the following:
+
+\begin{theorem}
+    Let $\mynet \colon I \to X$ be a net and $\calF$ a filter on $X$. For $F \subseteq X$ we have
+    %
+    \begin{enumerate}
+        \item $F \in \filter(\mynet)$ if and only if $\mynet$ is eventually in $F$, and
+        \item $F \in \calF$ if and only if $\net(\calF)$ is eventually in $F$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\begin{proofsec}
+    \item[(a)]
+    We have $F \in \filter(\mynet) = (\tails{\mynet})^\uparrow$ if and only if $F$ contains a tail $T$ of $\mynet$, and this is the case if and only if $\mynet$ is eventually in $F$.
+
+    \item[(b)]
+    Notice that $F \in \calF$ if and only if $F \in \filter(\net(\calF))$, which by (a) [TODO ref] is the case if and only if $\net(\calF)$ is eventually in $F$.
+\end{proofsec}
+\end{proof}
+%
+We may in particular apply this result to subnets and superfilters:
+
+\begin{proposition}
+    Let $\mynet$ and $\subnet$ be nets in a set $X$, and let $\calF$ and $\calG$ be filters on $X$. Then
+    %
+    \begin{enumerate}
+        \item $\subnet \leq \mynet$ if and only if $\filter(\mynet) \subseteq \filter(\subnet)$, and
+        \item $\calF \subseteq \calG$ if and only if $\net(\calG) \leq \net(\calF)$.
+    \end{enumerate}
+    %
+    In particular, the maps $\filter$ and $\net$ are decreasing. Furthermore, $\mynet \sim \subnet$ if and only if $\filter(\mynet) = \filter(\subnet)$.
+\end{proposition}
+
+\begin{proof}
+\begin{proofsec}
+    \item[(a)]
+    The filter $\filter(\mynet)$ contains those subsets $F \subseteq X$ such that $\mynet$ is eventually in $F$, so this follows immediately from [TODO ref].
+
+    \item[(b)]
+    We have $\calF \subseteq \calG$ if and only if $\filter(\net(\calF)) \subseteq \filter(\net(\calG))$, so this follows from (a).
+\end{proofsec}
+\end{proof}
+
+This motivates the following construction: If $\mynet$ is a net in $X$, denote by $[\mynet]$ the $\sim$-equivalence class of $\mynet$. [TODO ref proposition] then says that the map $\filter$ induces a map $\tilde\filter$ which sends a class $[\mynet]$ to $\filter(\mynet)$, and that this map is injective. It inherits surjectivity from $\filter$, so it is in fact a bijection between equivalence classes of nets and filters. Its inverse is the composition of $\net$ with the quotient map $\mynet \mapsto [\mynet]$, and we denote this by $\tilde\net$.
+
+\newcommand{\subord}{\vdash}
+
+Futhermore, we define an ordering $\subord$ on the set of filters by letting $\calG \subord \calF$ if $\calF \subseteq \calG$ (i.e. $\subord$ is dual to set inclusion), and in this case we say that $\calG$ is \emph{subordinate} to $\calF$. With this ordering, $\tilde\filter$ and $\tilde\net$ thus become order isomorphisms. In particular they send subnets to superfilters and vice-versa.
+
+
+\section{Convergence and cluster points}
+
+\begin{corollary}
+    Let $X$ be a topological space, $\mynet \colon I \to X$ a net and $\calF$ a filter on $X$. For $\mylimit \in X$ we have
+    %
+    \begin{enumerate}
+        \item $\mynet \to \mylimit$ if and only if $\filter(\mynet) \to \mylimit$, and
+        \item $\calF \to \mylimit$ if and only if $\net(\calF) \to \mylimit$.
+    \end{enumerate}
+\end{corollary}
+
+\begin{proof}
+    Apply [theorem] to each neighbourhood in $\nhoods{\mylimit}$.
+\end{proof}
+%
+Hence we see that even if the correspondence between nets and filters is not one-to-one, translating between them preserves the information we care about, namely convergence. Put another way, equivalent nets have the same convergence properties. The same is true for cluster points:
+
+\begin{corollary}
+    Let $X$ be a topological space, $\mynet \colon I \to X$ a net and $\calF$ a filter on $X$. For $\mylimit \in X$ we have that
+    %
+    \begin{enumerate}
+        \item $\mylimit$ is a cluster point of $\mynet$ iff it is a cluster point of $\filter(\mynet)$, and
+        \item $\mylimit$ is a cluster point of $\calF$ iff it is a cluster point of $\net(\calF)$.
+    \end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\begin{proofsec}
+    \item[(a)]
+    Notice that $\mylimit$ is a cluster point of $\mynet$ if and only if
+    %
+    \begin{equation*}
+        \forall N \in \nhoods{\mylimit}, T \in \tails{\mynet} \colon N \intersect T \neq \emptyset.
+    \end{equation*}
+    %
+    Since $\tails{\mynet}$ is a basis for $\filter(\mynet)$, by \cref{rem:filter-cluster-points} the above holds if and only if $\mylimit$ is a cluster point of $\filter(\mynet)$.
+
+    \item[(b)]
+    By (a), $\mylimit$ is a cluster point of $\net(\calF)$ if and only if it is a cluster point of $\filter(\net(\calF)) = \calF$.
+\end{proofsec}
+\end{proof}
+
+Next we see that cluster points can be characterised in terms of subnets and superfilters, just as limit points can in terms of sequences in a metric space.
+
+\begin{proposition}
+    Let $X$ be a topological space, $\mynet \colon I \to X$ a net and $\calF$ a filter on $X$. For $\mylimit \in X$ we have that
+    %
+    \begin{enumerate}
+        \item $\mylimit$ is a cluster point of $\calF$ iff $\calF$ has a superfilter converging to $\mylimit$, and
+        \item $\mylimit$ is a cluster point of $\mynet$ iff $\mynet$ has a subnet converging to $\mylimit$.
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\begin{proofsec}
+    \item[(a)]
+    First assume that $\mylimit$ is a cluster point of $\calF$ and consider the collection of sets
+    %
+    \begin{equation*}
+        \calB
+            = \set{F \intersect N}{F \in \calF, N \in \nhoods{\mylimit}}
+            \neq \emptyset.
+    \end{equation*}
+    %
+    Notice that every element in $\calB$ is nonempty, and that
+    %
+    \begin{equation*}
+        (F_1 \intersect N_1) \intersect (F_2 \intersect N_2)
+            = (F_1 \intersect F_2) \intersect (N_1 \intersect N_2)
+            \in \calB,
+    \end{equation*}
+    %
+    so $\calB$ is a filter basis. Denote the filter it generates by $\calG$. This is a superfilter of $\calF$ since $X \in \nhoods{\mylimit}$, and we have $\nhoods{\mylimit} \subseteq \calG$ since $X \in \calF$, so $\calG \to \mylimit$.
+
+    Conversely assume that $\calF$ has a superfilter $\calG$ converging to $\mylimit$. This means that $\nhoods{\mylimit} \subseteq \calG$, so for all $F \in \calF$ and $N \in \nhoods{\mylimit}$ the intersection $F \intersect N$ lies in $\calG$, hence is nonempty.
+
+    \item[(b)]
+    First assume that $\mylimit$ is a cluster point of $\mynet$. Then it is also a cluster point of $\filter(\mynet)$, and this filter has a superfilter $\calG$ converging to $\mylimit$. Then also $\net(\calG)$ converges to $\mylimit$, and since $\filter(\mynet) \subseteq \calG = \filter(\net(\calG))$ it follows that $\net(\calG)$ is a subnet of $\mynet$.
+
+    Conversely let $\subnet$ be a subnet of $\mynet$ converging to $\mylimit$. Then $\filter(\mynet) \subseteq \filter(\subnet)$ and $\filter(\subnet) \to \mylimit$, so (a) implies that $\mylimit$ is a cluster point of $\filter(\mynet)$, hence of $\mynet$.
+\end{proofsec}
+\end{proof}
+
+
+
+\end{document}
